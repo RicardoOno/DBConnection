@@ -6,10 +6,10 @@ var mysql = require('mysql');
 function createDBConnection(){
     return mysql.createConnection({
         host: '127.0.0.1',
-        port: '3002',
+        port: '3307',
         user: 'root',
-        password: 'usbw',
-        database:'statistic'
+        password: '',
+        database: 'dashboard'
     });
 }
 
