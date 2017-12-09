@@ -9,7 +9,7 @@ function createDBConnection(){
         port: '3307',
         user: 'root',
         password: '',
-        database: 'dashboard'
+        database: 'dbvenda'
     });
 }
 
