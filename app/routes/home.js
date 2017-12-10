@@ -143,104 +143,43 @@ let errorMsg = require('./errorMsg.json');
 // ---------------------- INICIO ATUALIZAR -----------------
     app.put('/vendas/editar',(req, res) => {
         let params = req.body;
-        console.log(params);
-        let info = params["info"];
-        console.log(info);
+
+    //console.log(params);
+    let info = params["info"];
+    var keysInfo = [];
+    Object.keys(info).forEach(function(key) {
+        keysInfo = key;
+        console.log(keysInfo);
+    });
         let id = params["id"];
-        console.log(id);
+        //console.log(id);
         let resultJson = '';
         let connection = app.infra.connectionFactory();
         let atualizar = new app.infra.applicationDAO(connection);
-        atualizar.atualiza(info, id, function(err, results){
-            console.log(err);
+        atualizar.atualiza(info, id, function (err, results) {
+            res.send('ok');
         });
-        res.end();
         connection.end();
-})
+});
 // ---------------------- FIM ATUALIZAR -----------------
 
 // ---------------------- INICIO DELETAR -----------------
     app.delete('/vendas/excluir/', (req,res) => {
-        let idVendas = req.body;
+        let idVendas = req.body.idVendas;
         console.log(idVendas);
-        let resultJson = '';
-        let connection = app.infra.connectionFactory();
-        let deletar = new app.infra.applicationDAO(connection);
-        deletar.deleta(idVendas, function(err, results){
-            console.log('~>results: ', results);
-            console.log('~>Err: ', err);
-        });
-        res.end();
-        connection.end();
-    });
-// ---------------------- FIM DELETAR -----------------
-
-
-
-
-
-
-
-
-
-
-
-
-    app.route('/api')
-        .get((req, res) => {
-            let resultsJson = '';
-            let connection = app.infra.connectionFactory();
-            let listas = new app.infra.applicationDAO(connection); //applicationDAO em minusculo
-            listas.lista(function (error, results, fields) {
-                resultsJson = JSON.stringify(results);
-                console.log(resultsJson);
-                fs.writeFile('bd.json', resultsJson, (err) => {
-                    if(err) throw err;
-                    console.log('Salvo');
-                });
-                res.send(resultsJson);
-            });
-            connection.end();
-        })
-        .post((req, res) => {
-            let teste = req.body;
-            let resultsJson = '';
-            let connection = app.infra.connectionFactory();
-            let atualizar = new app.infra.applicationDAO(connection); //applicationDAO em minusculo
-            atualizar.salva(teste, function (err, results) {
-                resultsJson = JSON.stringify(results);
-                console.log('~>results: ', results);
-                console.log('~>Err: ', err);
-                res.send(resultsJson)
-            });
-            connection.end();
-        })
-        .delete((req,res) => {
-            let teste = req.body;
+        if (isNaN(idVendas)) {
+            res.send(errorMsg["excluir"][0]);
+        } else {
+            console.log(idVendas);
             let resultJson = '';
             let connection = app.infra.connectionFactory();
             let deletar = new app.infra.applicationDAO(connection);
-            deletar.deleta(teste, function(err, results){
-               console.log('~>results: ', results);
-               console.log('~>Err: ', err);
+            deletar.deleta(idVendas, function (err, results) {
+                res.end();
             });
-            res.end();
             connection.end();
-        })
-        .put((req, res) => {
-            let teste = req.body;
-            console.log(teste);
-            let produto = teste["produto"];
-            console.log(produto);
-            let id = teste["id"];
-            console.log(id);
-            let resultJson = '';
-            let connection = app.infra.connectionFactory();
-            let atualizar = new app.infra.applicationDAO(connection);
-            atualizar.atualiza(produto, id, function(err, results){
-                console.log(err);
-            });
-            res.end();
-            connection.end();
-        })
+        }
+    });
+
+// ---------------------- FIM DELETAR -----------------
 };

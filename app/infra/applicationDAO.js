@@ -39,7 +39,7 @@ applicationDAO.prototype.salva = function (venda, callback) {
 
 // ---------------------- INICIO DELETE -----------------
 applicationDAO.prototype.deleta = function (idVendas, callback) {
-    this._connection.query('delete from vendas where ?', idVendas, callback);
+    this._connection.query('delete from vendas where idVendas = ' +idVendas, callback);
 };
 // ---------------------- FIM DELETE -----------------
 
