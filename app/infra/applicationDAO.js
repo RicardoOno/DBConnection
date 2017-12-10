@@ -5,7 +5,7 @@
 function applicationDAO(connection) {
     this._connection = connection;
 };
-
+// ---------------------- INICIO SELECT -----------------
 applicationDAO.prototype.lista = function(callback) {
       this._connection.query('select * from vendas', callback);
 };
@@ -23,25 +23,31 @@ applicationDAO.prototype.usuarioEspecifico = function(idUsuario, callback) {
 };
 
 applicationDAO.prototype.dataEspecifica = function(dtVenda, callback) {
-    console.log('DAO: ', dtVenda);
-    this._connection.query('select * from vendas where dtVenda = ' + (dtVenda.toString()), callback);
+    var dtVenda = '"'+dtVenda+'"';
+    this._connection.query('select * from vendas where dtVenda = ' + dtVenda, callback);
 
 };
+// ---------------------- FIM SELECT -----------------
 
-//INSERT INTO `vendas` (`idVendas`, `idProduto`, `idUsuario`, `dtVenda`, `statusVenda`) VALUES (NULL, '1', '1', CURRENT_DATE(), 'Disponivel');
-
-
-applicationDAO.prototype.salva = function (produto, callback) {
-    this._connection.query('insert into vendas set ?', produto, callback);
+// ---------------------- INICIO INSERT -----------------
+applicationDAO.prototype.salva = function (venda, callback) {
+    this._connection.query('insert into vendas set ?', venda, callback);
     //this._connection.query('insert into livros (nome) values (?)');
 };
-applicationDAO.prototype.deleta = function (id, callback) {
-    this._connection.query('delete from vendas where ?', id, callback);
-};
-applicationDAO.prototype.atualiza = function (produto, id, callback) {
-    this._connection.query('update tkpp set ? where vendas.id ='+ id, produto, callback);
-};
+// ---------------------- FIM SELECT -----------------
 
+
+// ---------------------- INICIO DELETE -----------------
+applicationDAO.prototype.deleta = function (idVendas, callback) {
+    this._connection.query('delete from vendas where ?', idVendas, callback);
+};
+// ---------------------- FIM DELETE -----------------
+
+// ---------------------- INICIO UPDATE -----------------
+applicationDAO.prototype.atualiza = function (info, id, callback) {
+    this._connection.query('update vendas set ? where vendas.idVendas = '+ id, info, callback);
+};
+// ---------------------- FIM UPDATE -----------------
 
 module.exports = function(){
     return applicationDAO;
