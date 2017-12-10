@@ -1,0 +1,46 @@
+{
+  "consultar": [
+    {
+      "codigo":"[C000]",
+      "msg":"Nenhuma venda realizada"
+    },
+    {
+      "codigo":"[C001]",
+      "msg":"Venda​ ​não​ ​encontrada"
+    },
+    {
+      "codigo":"[C002]",
+      "msg":"Produto não encontrado"
+    },
+    {
+      "codigo":"[C003]",
+      "msg":"Data inválida"
+    },
+    {
+      "codigo":"[C004]",
+      "msg":"Usuário não encontrado"
+    },
+    {
+      "codigo":"[C005]",
+      "msg":"Parametro inváido"
+    }
+  ],
+  "inserir": [
+    {
+      "codigo": "[I001]",
+      "msg": "Parametro inválido"
+    }
+  ],
+  "excluir": [
+    {
+      "codigo":"[E001]",
+      "msg": "Exclusão não realizada"
+    }
+  ],
+  "alterar": [
+    {
+      "codigo":"[A001]",
+      "msg": "Alteração não realizada"
+    }
+  ]
+}

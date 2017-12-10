@@ -4,7 +4,7 @@
 //let api = require('../api/api');
 let fs = require('fs');
 module.exports = function(app){
-
+let errorMsg = require('./errorMsg.json');
 
 // ---------------------- INICIO CONSULTAR -----------------
     // ---------------------- INICIO CONSULTAR GERAL -----------------
@@ -13,13 +13,15 @@ module.exports = function(app){
         let connection = app.infra.connectionFactory();
         let listas = new app.infra.applicationDAO(connection); //applicationDAO em minusculo
         listas.lista(function (error, results, fields) {
-            resultsJson = JSON.stringify(results);
-            console.log(resultsJson);
             fs.writeFile('bd.json', resultsJson, (err) => {
                 if(err) throw err;
             console.log('Salvo');
         });
-            res.send(resultsJson);
+            if(results.length === 0){
+                res.send(errorMsg["consultar"][0]);
+            } else {
+                res.send(results);
+            }
         });
         connection.end();
         });
@@ -28,54 +30,67 @@ module.exports = function(app){
     // ---------------------- INICIO CONSULTAR VENDA -----------------
     app.get('/vendas/consultar/idVenda/:idVenda', (req, res) => {
         let idVenda= req.params.idVenda;
-    console.log('~>idVenda: ', idVenda);
-    let resultJson = '';
-    let connection = app.infra.connectionFactory();
-    let lstEspecifica = new app.infra.applicationDAO(connection);
-    lstEspecifica.vendaEspecifica(idVenda, function (err, results) {
-        console.log(results.length);
-        if(results.length === 0){
-            res.send({"[C001]": "Venda não encontrado"});
-        } else {
-            res.json(results);
-        }
-    });
-    connection.end();
+    if(isNaN(idVenda)){
+        res.send(errorMsg["consultar"][5]);
+    } else {
+        console.log('~>idVenda: ', idVenda);
+        let resultJson = '';
+        let connection = app.infra.connectionFactory();
+        let lstEspecifica = new app.infra.applicationDAO(connection);
+        lstEspecifica.vendaEspecifica(idVenda, function (err, results) {
+            console.log(results.length);
+            if (results.length === 0) {
+                res.send(errorMsg["consultar"][1]);
+            } else {
+                res.send(results);
+            }
+        });
+        connection.end();
+    }
     });
     // ---------------------- FIM CONSULTAR USUARIO -----------------
 
     // ---------------------- INICIO CONSULTAR PRODUTO -----------------
     app.get('/vendas/consultar/idProduto/:idProduto', (req, res) => {
         let idProduto= req.params.idProduto;
-    let resultJson = '';
-    let connection = app.infra.connectionFactory();
-    let lstEspecifica = new app.infra.applicationDAO(connection);
-    lstEspecifica.produtoEspecifico(idProduto, function (err, results) {
-        console.log(results.length);
-        if(results.length === 0){
-            res.send({"[C002]": "Produto não encontrado"});
-        } else {
-            res.send(results);
-        }
-    });
-    connection.end();
+    if(isNaN(idProduto)){
+        res.send(errorMsg["consultar"][5]);
+    } else {
+        let resultJson = '';
+        let connection = app.infra.connectionFactory();
+        let lstEspecifica = new app.infra.applicationDAO(connection);
+        lstEspecifica.produtoEspecifico(idProduto, function (err, results) {
+            console.log(results.length);
+            if (results.length === 0) {
+                res.send(errorMsg["consultar"][2]);
+            } else {
+                res.send(results);
+            }
+        });
+        connection.end();
+    }
     });
     // ---------------------- FIM CONSULTAR PRODUTO -----------------
 
     // ---------------------- INICIO CONSULTAR USUARIO -----------------
     app.get('/vendas/consultar/idUsuario/:idUsuario', (req, res) => {
         let idUsuario = req.params.idUsuario;
-    let resultJson = '';
-    let connection = app.infra.connectionFactory();
-    let lstEspecifica = new app.infra.applicationDAO(connection);
-    lstEspecifica.usuarioEspecifico(idUsuario, function (err, results) {
-        if(results.length === 0){
-            res.send({"[C004]": "Usuário não encontrado"});
+        if(isNaN(idUsuario)){
+            res.send(errorMsg["consultar"][5]);
         } else {
-            res.send(results);
+            let resultJson = '';
+            let connection = app.infra.connectionFactory();
+            let lstEspecifica = new app.infra.applicationDAO(connection);
+            lstEspecifica.usuarioEspecifico(idUsuario, function (err, results) {
+                console.log(results);
+                if (results.length === 0) {
+                    res.send(errorMsg["consultar"][4]);
+                } else {
+                    res.send(results);
+                }
+            });
+            connection.end();
         }
-    });
-    connection.end();
     });
     // ---------------------- FIM CONSULTAR USUARIO -----------------
 
@@ -88,7 +103,7 @@ module.exports = function(app){
     let lstEspecifica = new app.infra.applicationDAO(connection);
     lstEspecifica.dataEspecifica(dtVenda, function (err, results) {
         if(results.length === 0){
-            res.send({"[C003]": "Data inválida"});
+            res.send(errorMsg["consultar"][3]);
         } else {
             res.send(results);
         }
@@ -101,14 +116,27 @@ module.exports = function(app){
 // ---------------------- INICIO INSERIR -----------------
     app.post('/vendas/incluir',(req, res) => {
         let venda = req.body;
-        let resultsJson = '';
-        let connection = app.infra.connectionFactory();
-        let inserir = new app.infra.applicationDAO(connection); //applicationDAO em minusculo
-        inserir.salva(venda, function (err, results) {
-            resultsJson = JSON.stringify(results);
-            res.status(200).send(resultsJson);
-        });
-        connection.end();
+        console.log(venda["idProduto"]);
+        console.log(venda["dtVenda"].length);
+        if(isNaN(venda["idProduto"])
+            || isNaN(venda["idUsuario"])
+            || typeof venda["dtVenda"] !== 'string'
+            || typeof venda["statusVenda"] !== 'string'
+            || venda["dtVenda"].length !== 10){
+                res.send(errorMsg["inserir"][0]);
+        } else {
+            let resultsJson = '';
+            let connection = app.infra.connectionFactory();
+            let inserir = new app.infra.applicationDAO(connection); //applicationDAO em minusculo
+            inserir.salva(venda, function (err, results) {
+                if (results["warningCount"] !== 0) {
+                    res.send(errorMsg["inserir"][0]);
+                } else {
+                    res.status(200).send('Cadastrado com sucesso');
+                }
+            });
+            connection.end();
+        }
     });
 // ---------------------- FIM INSERIR -----------------
 
