@@ -33,9 +33,12 @@ module.exports = function(app){
     let connection = app.infra.connectionFactory();
     let lstEspecifica = new app.infra.applicationDAO(connection);
     lstEspecifica.vendaEspecifica(idVenda, function (err, results) {
-        resultsJson = JSON.stringify(results);
-        console.log(resultsJson);
-        res.send(resultsJson);
+        console.log(results.length);
+        if(results.length === 0){
+            res.send({"[C001]": "Venda não encontrado"});
+        } else {
+            res.json(results);
+        }
     });
     connection.end();
     });
@@ -48,9 +51,12 @@ module.exports = function(app){
     let connection = app.infra.connectionFactory();
     let lstEspecifica = new app.infra.applicationDAO(connection);
     lstEspecifica.produtoEspecifico(idProduto, function (err, results) {
-        resultsJson = JSON.stringify(results);
-        console.log(resultsJson);
-        res.send(resultsJson);
+        console.log(results.length);
+        if(results.length === 0){
+            res.send({"[C002]": "Produto não encontrado"});
+        } else {
+            res.send(results);
+        }
     });
     connection.end();
     });
@@ -63,9 +69,11 @@ module.exports = function(app){
     let connection = app.infra.connectionFactory();
     let lstEspecifica = new app.infra.applicationDAO(connection);
     lstEspecifica.usuarioEspecifico(idUsuario, function (err, results) {
-        resultsJson = JSON.stringify(results);
-        console.log(resultsJson);
-        res.send(resultsJson);
+        if(results.length === 0){
+            res.send({"[C004]": "Usuário não encontrado"});
+        } else {
+            res.send(results);
+        }
     });
     connection.end();
     });
@@ -79,9 +87,11 @@ module.exports = function(app){
     let connection = app.infra.connectionFactory();
     let lstEspecifica = new app.infra.applicationDAO(connection);
     lstEspecifica.dataEspecifica(dtVenda, function (err, results) {
-        resultsJson = JSON.stringify(results);
-        console.log(resultsJson);
-        res.send(resultsJson);
+        if(results.length === 0){
+            res.send({"[C003]": "Data inválida"});
+        } else {
+            res.send(results);
+        }
     });
     connection.end();
     });
