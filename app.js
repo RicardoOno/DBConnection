@@ -14,7 +14,7 @@ var corsOptions = ({
     optionsSuccessStatus: 200
 });
 
-
-app.listen(8000, cors(corsOptions), function () {
+// parametros: porta, ip, ...
+app.listen(8000, '192.168.2.183', cors(corsOptions), function () {
     console.log('====> Servidor ligado <====');
 });

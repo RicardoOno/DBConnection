@@ -116,14 +116,12 @@ let errorMsg = require('./errorMsg.json');
 // ---------------------- INICIO INSERIR -----------------
     app.post('/vendas/incluir',(req, res) => {
         let venda = req.body;
-        console.log(venda["idProduto"]);
-        console.log(venda["dtVenda"].length);
         if(isNaN(venda["idProduto"])
             || isNaN(venda["idUsuario"])
             || typeof venda["dtVenda"] !== 'string'
             || typeof venda["statusVenda"] !== 'string'
             || venda["dtVenda"].length !== 10){
-                res.send(errorMsg["inserir"][0]);
+                res.send(errorMsg["inserir"][1]);
         } else {
             let resultsJson = '';
             let connection = app.infra.connectionFactory();
@@ -132,7 +130,7 @@ let errorMsg = require('./errorMsg.json');
                 if (results["warningCount"] !== 0) {
                     res.send(errorMsg["inserir"][0]);
                 } else {
-                    res.status(200).send('Cadastrado com sucesso');
+                    res.status(200).send(errorMsg['inserir'][0]);
                 }
             });
             connection.end();
@@ -143,21 +141,25 @@ let errorMsg = require('./errorMsg.json');
 // ---------------------- INICIO ATUALIZAR -----------------
     app.put('/vendas/editar',(req, res) => {
         let params = req.body;
-
+        console.log('REQ.BODY: ', params);
     //console.log(params);
     let info = params["info"];
+
+    console.log('params["info"]: ', params["info"]);
     var keysInfo = [];
     Object.keys(info).forEach(function(key) {
         keysInfo = key;
         console.log(keysInfo);
     });
         let id = params["id"];
+
+    console.log('params["id"]: ', params["id"]);
         //console.log(id);
         let resultJson = '';
         let connection = app.infra.connectionFactory();
         let atualizar = new app.infra.applicationDAO(connection);
         atualizar.atualiza(info, id, function (err, results) {
-            res.send('ok');
+            res.send(errorMsg['alterar'][0]);
         });
         connection.end();
 });

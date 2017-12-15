@@ -28,18 +28,30 @@
   "inserir": [
     {
       "codigo": "[I001]",
+      "msg": "Cadastrado com sucesso"
+    },
+    {
+      "codigo": "[I002]",
       "msg": "Parametro inválido"
     }
   ],
   "excluir": [
     {
       "codigo":"[E001]",
+      "msg": "Exclusão realizada"
+    },
+    {
+      "codigo":"[E002]",
       "msg": "Exclusão não realizada"
     }
   ],
   "alterar": [
     {
       "codigo":"[A001]",
+      "msg": "Alteração realizado com sucesso"
+    },
+    {
+      "codigo":"[A002]",
       "msg": "Alteração não realizada"
     }
   ]
