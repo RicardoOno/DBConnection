@@ -15,6 +15,6 @@ var corsOptions = ({
 });
 
 // parametros: porta, ip, ...
-app.listen(8000, '192.168.2.183', cors(corsOptions), function () {
+app.listen(8000, cors(corsOptions), function () {
     console.log('====> Servidor ligado <====');
 });
